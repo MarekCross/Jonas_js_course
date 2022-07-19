@@ -93,4 +93,35 @@ const renderCountry = function (data, className = '') {
 //   request.open('GET', `https://restcountries.com/v2/name/${country}`);
 //   request.send();
 //new way
-const request = fetch(`https://restcountries.com/v2/name/poland`);
+//conpilated version
+// const getCountryData = function (country) {
+//   fetch(`https://restcountries.com/v2/name/${country}`)
+//     .then(function (response) {
+//       console.log(response);
+//       return response.json();
+//     })
+//     .then(function (data) {
+//       console.log(data);
+//     });
+// };
+//new better version
+const getCountryData = function (country) {
+  fetch(`https://restcountries.com/v2/name/${country}`)
+    //country 1
+    .then(response => response.json())
+    .then(data => {
+      console.log(data[0]);
+      renderCountry(data[0]);
+      //country 2
+      const neighbour = data[0].borders?.[0];
+      if (!neighbour) return;
+
+      return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      renderCountry(data, 'neighbour');
+    });
+};
+getCountryData('spain');
