@@ -185,7 +185,33 @@ const renderError = function (msg) {
 // btn.addEventListener('click', function () {
 //   whereAmI('52.508', '13.381');
 // });
-console.log('Test start');
-setTimeout(() => console.log('0 sec'), 0);
-Promise.resolve('Resolved promise 1').then(res => console.log(res));
-console.log('Test end');
+// console.log('Test start');
+// setTimeout(() => console.log('0 sec'), 0);
+// Promise.resolve('Resolved promise 1').then(res => console.log(res));
+// console.log('Test end');
+///
+//259 promises
+//
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log('you lottery is running:');
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve('you win congrats');
+    } else {
+      reject(new Error('you lost your money'));
+    }
+  }, 2000);
+});
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+wait(2)
+  .then(() => {
+    console.log('I waited 2 sec');
+    return wait(1);
+  })
+  .then(() => console.log('i waited 1 sec'));
