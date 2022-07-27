@@ -192,26 +192,63 @@ const renderError = function (msg) {
 ///
 //259 promises
 //
-const lotteryPromise = new Promise(function (resolve, reject) {
-  console.log('you lottery is running:');
-  setTimeout(function () {
-    if (Math.random() >= 0.5) {
-      resolve('you win congrats');
-    } else {
-      reject(new Error('you lost your money'));
-    }
-  }, 2000);
-});
-lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+// const lotteryPromise = new Promise(function (resolve, reject) {
+//   console.log('you lottery is running:');
+//   setTimeout(function () {
+//     if (Math.random() >= 0.5) {
+//       resolve('you win congrats');
+//     } else {
+//       reject(new Error('you lost your money'));
+//     }
+//   }, 2000);
+// });
+// lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
 
-const wait = function (seconds) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, seconds * 1000);
+// const wait = function (seconds) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
+// wait(2)
+//   .then(() => {
+//     console.log('I waited 2 sec');
+//     return wait(1);
+//   })
+//   .then(() => console.log('i waited 1 sec'));
+///260
+
+const getPosition = function () {
+  return new Promise(function (resolve, rejected) {
+    // navigator.geolocation.getCurrentPosition(
+    //   position => resolve(position),
+    //   err => rejected(err)
+    // );
+    navigator.geolocation.getCurrentPosition(resolve, rejected);
   });
 };
-wait(2)
-  .then(() => {
-    console.log('I waited 2 sec');
-    return wait(1);
-  })
-  .then(() => console.log('i waited 1 sec'));
+
+getPosition().then(pos => console.log(pos));
+
+const WhereAmI2 = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+      return fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    })
+
+    .then(res => {
+      if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      console.log(`you are in ${data.city}, ${data.country}`);
+      return fetch(`https://restcountries.eu/rest/v2/name/${data.country}`);
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`country not found`);
+      return res.json();
+    })
+    .then(data => renderCountry(data[0]))
+    .catch(err => console.error(`${err.message} lols`));
+};
+btn.addEventListener('click', WhereAmI2);
