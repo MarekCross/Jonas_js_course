@@ -313,18 +313,41 @@ const getPosition = function () {
 };
 
 const WhereAmI3 = async function () {
-  const pos = await getPosition();
-  const { latitude: lat, longitude: lng } = pos.coords;
+  try {
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
 
-  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
-  const dataGeo = await resGeo.json();
-  console.log(dataGeo);
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    if (!resGeo.ok) throw new Error('problem getting location data resgo');
+    const dataGeo = await resGeo.json();
 
-  const res = await fetch(
-    `https://restcountries.com/v2/name/${dataGeo.country}`
-  );
-  const data = await res.json();
-  renderCountry(data[0]);
+    const res = await fetch(
+      `https://restcountries.com/v2/name/${dataGeo.country}`
+    );
+    if (!res.ok) throw new Error('problem getting location data res');
+    const data = await res.json();
+    renderCountry(data[0]);
+    return `You are in ${dataGeo.country}`;
+  } catch (err) {
+    console.log(err);
+    renderError(`sometinh went wrong'${err}`);
+    throw err;
+  }
 };
-WhereAmI3();
-console.log(`first`);
+console.log(`1: Will get location`);
+// const city = WhereAmI3();
+// console.log(city);
+// WhereAmI3()
+//   .then(city => console.log(city))
+//   .catch(err => console.error(err))
+//   .finally(() => console.log(`2. finish getting location`));
+//TO NIŻEJ TO JEST TO SAMO CO TO WYŻEJ!!!
+(async function () {
+  try {
+    const city = await WhereAmI3();
+    console.log(`2. ${city}`);
+  } catch (Err) {
+    console.error(`2. ${Err.message}`);
+  }
+  console.log(`3. finish`);
+})();
