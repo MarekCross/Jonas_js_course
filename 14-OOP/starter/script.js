@@ -173,56 +173,71 @@
 // }
 
 //coding chellange 4
-const Car = function (make, speed) {
+// const Car = function (make, speed) {
+//   this.make = make;
+//   this.speed = speed;
+// };
+
+// const EV = function (make, speed, charge) {
+//   Car.call(this, make, speed);
+//   this.charge = charge;
+// };
+
+// EV.prototype = Object.create(Car.prototype);
+
+// EV.prototype.chargeBettery = function (chargeTo) {
+//   this.charge = chargeTo;
+// };
+// EV.prototype.accelerate = function () {
+//   this.speed += 20;
+//   this.charge -= 1;
+//   console.log(`Car is going ${this.speed} with ${this.charge}%.`);
+// };
+// const Honda = new EV('Honda', 100, 40);
+// // Honda.accelerate();
+// // console.log(Honda);
+
+// class CarCl {
+//   constructor(make, speed) {
+//     this.make = make;
+//     this.speed = speed;
+//   }
+// }
+
+// class EVCl extends CarCl {
+//   #charge;
+//   constructor(make, speed, charge) {
+//     super(make, speed);
+//     this.#charge = charge;
+//   }
+//   chargeBettery(chargeTo) {
+//     this.#charge = chargeTo;
+//     return this;
+//   }
+//   accelerate() {
+//     this.speed += 20;
+//     this.#charge -= 1;
+//     console.log(`Car is going ${this.speed} with ${this.charge}%.`);
+//     return this;
+//   }
+// }
+// const rivian = new EVCl('honda', 100, 50);
+// console.log(rivian);
+
+// rivian.accelerate().chargeBettery(430);
+// console.log(rivian);
+
+const Car = function (make, year, color) {
+  this.color = color;
+  this.year = year;
   this.make = make;
-  this.speed = speed;
+  this.showInfo = function () {
+    console.log(`This ${make} was made in ${year} and have ${color} color.`);
+  };
 };
-
-const EV = function (make, speed, charge) {
-  Car.call(this, make, speed);
-  this.charge = charge;
+Car.prototype.wheels = function () {
+  console.log(`have ${this.color} wheels`);
 };
-
-EV.prototype = Object.create(Car.prototype);
-
-EV.prototype.chargeBettery = function (chargeTo) {
-  this.charge = chargeTo;
-};
-EV.prototype.accelerate = function () {
-  this.speed += 20;
-  this.charge -= 1;
-  console.log(`Car is going ${this.speed} with ${this.charge}%.`);
-};
-const Honda = new EV('Honda', 100, 40);
-// Honda.accelerate();
-// console.log(Honda);
-
-class CarCl {
-  constructor(make, speed) {
-    this.make = make;
-    this.speed = speed;
-  }
-}
-
-class EVCl extends CarCl {
-  #charge;
-  constructor(make, speed, charge) {
-    super(make, speed);
-    this.#charge = charge;
-  }
-  chargeBettery(chargeTo) {
-    this.#charge = chargeTo;
-    return this;
-  }
-  accelerate() {
-    this.speed += 20;
-    this.#charge -= 1;
-    console.log(`Car is going ${this.speed} with ${this.charge}%.`);
-    return this;
-  }
-}
-const rivian = new EVCl('honda', 100, 50);
-console.log(rivian);
-
-rivian.accelerate().chargeBettery(430);
-console.log(rivian);
+const honda = new Car(`honda`, 1999, `black`);
+honda.showInfo();
+honda.wheels();
